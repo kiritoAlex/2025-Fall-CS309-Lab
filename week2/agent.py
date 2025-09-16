@@ -83,14 +83,11 @@ class ReActAgent:
     def render_system_prompt(self, system_prompt_template: str) -> str:
         """渲染系统提示模板，替换变量"""
         tool_list = self.get_tool_list()
-        file_list = ", ".join(
-            os.path.abspath(os.path.join(self.project_directory, f))
-            for f in os.listdir(self.project_directory)
-        )
+        project_path = self.project_directory
         return Template(system_prompt_template).substitute(
             operating_system=self.get_operating_system_name(),
             tool_list=tool_list,
-            file_list=file_list
+            project_path=project_path
         )
 
     def call_model(self, messages):
@@ -185,25 +182,22 @@ class ReActAgent:
         return os_map.get(platform.system(), "Unknown")
 
 
-    def read_file(self, file_path):
-        """用于读取文件内容"""
-        full_path = os.path.join(self.project_directory, file_path)
-        with open(full_path, "r", encoding="utf-8") as f:
-            return f.read()
+def read_file(file_path):
+    """用于读取文件内容"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
 
-    def write_to_file(self, file_path, content):
-        """将指定内容写入指定文件"""
-        full_path = os.path.join(self.project_directory, file_path)
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
-        with open(full_path, "w", encoding="utf-8") as f:
-            f.write(content.replace("\\n", "\n"))
-        return "写入成功"
+def write_to_file(file_path, content):
+    """将指定内容写入指定文件"""
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(content.replace("\\n", "\n"))
+    return "写入成功"
 
-    def run_terminal_command(self, command):
-        """用于执行终端命令"""
-        import subprocess
-        run_result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        return "执行成功" if run_result.returncode == 0 else run_result.stderr
+def run_terminal_command(command):
+    """用于执行终端命令"""
+    import subprocess
+    run_result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return "执行成功" if run_result.returncode == 0 else run_result.stderr
 
 @click.command()
 @click.argument('project_directory',type=click.Path(file_okay=False, dir_okay=True))
@@ -215,12 +209,8 @@ def main(project_directory):
         os.makedirs(project_dir)
         print(f"已创建项目目录: {project_dir}")
 
-    agent = ReActAgent(tools=[], model="gemini-2.5-flash", project_directory=project_dir)
-    agent.tools = {
-        "read_file": agent.read_file,
-        "write_to_file": agent.write_to_file,
-        "run_terminal_command": agent.run_terminal_command
-    }
+    tools = [read_file, write_to_file, run_terminal_command]
+    agent = ReActAgent(tools=tools, model="gemini-2.5-flash", project_directory=project_dir)
 
     task = input("请输入任务：")
 

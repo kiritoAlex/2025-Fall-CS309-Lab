@@ -51,5 +51,5 @@ ${tool_list}
 环境信息：
 
 操作系统：${operating_system}
-当前目录下文件列表：${file_list}
+当前项目绝对路径：${project_path}
 """
