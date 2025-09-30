@@ -65,3 +65,5 @@ desktop.ini
 # =========================
 # 如果生成 PDF/HTML 文档
 docs/_build/
+text2vec-base-chinese/
+mmarco-mMiniLMv2-L12-H384-v1/
