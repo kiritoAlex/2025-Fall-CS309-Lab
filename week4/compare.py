@@ -26,7 +26,7 @@ client = OpenAI(
 )
 
 # 初始化 tiktoken encoder
-encoding = tiktoken.encoding_for_model("gpt-4o-mini")
+encoding = tiktoken.encoding_for_model("gpt-5-mini")
 
 def count_tokens(text: str) -> int:
     """使用 tiktoken 计算 token 数量"""
@@ -177,7 +177,7 @@ def function_calling_agent(query: str, max_iterations: int = 5) -> dict:
 
     for iteration in range(max_iterations):
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-5-mini",
             messages=messages,
             tools=tools,
             tool_choice="auto"
@@ -268,7 +268,7 @@ def run_comparison():
             # 创建 ReAct Agent 实例（使用带 token 统计的版本）
             react_agent = ReActAgentWithTokenCounting(
                 tools=react_tools,
-                model="gpt-4o-mini",
+                model="gpt-5-mini",
                 project_directory=os.getcwd()
             )
 
