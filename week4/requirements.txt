@@ -1,0 +1,23 @@
+# Week 4 实验依赖包
+
+# OpenAI API
+openai>=1.12.0
+
+# Anthropic API (for MCP examples)
+anthropic>=0.39.0
+
+# MCP SDK (requires Python >= 3.10)
+# mcp>=1.1.0
+# Note: MCP examples are optional and require Python 3.10+
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Week 2 dependencies (for compare.py)
+click>=8.0.0
+
+# Token counting
+tiktoken>=0.5.0
+
+# Optional: for better output formatting
+rich>=13.0.0
